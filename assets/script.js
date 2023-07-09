@@ -3,12 +3,16 @@ console.log(x);
 
 // this is still a test. timer will go negative forever
 const timerRight = document.getElementById("timer");
+const buttomStart = document.getElementById("buttom-start");
 let seconds = 60;
-setInterval (() => {
+
+timerRight = setInterval (() => {
     seconds--;
     timerRight.textContent = "timer " + seconds;
 }, 1000);
 clearInterval();
+
+
 
 // setInterval will go inside the timerQuiz function.
 // function timerQuiz {
