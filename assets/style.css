@@ -1,4 +1,39 @@
 * {
-  background-color: rgb(66, 66, 47);
-  color: rgb(236, 194, 174);
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(0deg, rgb(194, 136, 12) 0%, rgba(237,245,249,1) 75%);
+  /* background: rgb(212, 138, 103); */
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 50px;
+  text-align: center;
+  background: #13293d;
+  color: #fff;
+  
+}
+
+#buttom-score {
+}
+
+#timer {
+  justify-content: flex-end;
+  margin-left: auto;
+  font-size: 20px;
+  color: #0dc416;
+}
+
+main {
+
+}
+
+#buttom-start {
+  background-color:  #0dc416;
 }
