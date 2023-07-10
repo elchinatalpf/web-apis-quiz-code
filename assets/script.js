@@ -1,17 +1,38 @@
-var x = 1;
-console.log(x);
-
 // this is still a test. timer will go negative forever
-const timerRight = document.getElementById("timer");
-const buttomStart = document.getElementById("buttom-start");
-let seconds = 60;
+var timerRight = document.querySelector("#timer");
+var buttonStart = document.querySelector(".start-button-box");
+
+var questions = [];
+
+var seconds;
 
 timerRight = setInterval (() => {
     seconds--;
-    timerRight.textContent = "timer " + seconds;
+    timerRight.textContent = " " + seconds;
 }, 1000);
 clearInterval();
 
+function startGame () {
+    seconds = 180;
+    buttonStart.disable = true;
+    console.log(seconds);
+    //here goes the functions that start the game
+    userQuestions();
+    userAnswers();
+}
+
+//here goes all the question to the user
+function userQuestions () {
+    console.log(seconds);
+}
+  
+// here is validated the user's answers
+function userAnswers () {
+    console.log(seconds);
+}
+
+
+buttonStart.addEventListener("click", startGame); 
 
 
 // setInterval will go inside the timerQuiz function.
