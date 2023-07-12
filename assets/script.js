@@ -1,80 +1,96 @@
 // this is still a test. timer will go negative forever
+var questions = [
+    {
+        q: "Inside which HTML element do we put the JavaScript?",
+        a: [{ text: "<scripting>", isCorrect: false },
+        { text: "<js>", isCorrect: false },
+        { text: "<javascript>", isCorrect: false },
+        { text: "<script>", isCorrect: true }
+        ]
+    },
+    {
+        q: "Where is the correct place to insert a JavaScript?",
+        a: [{ text: "The <body> section", isCorrect: true },
+        { text: "The <head> section", isCorrect: false },
+        { text: "Both the <head> and the <body> section are correct", isCorrect: false }
+        ]
+    },
+    {
+        q: "What is the correct syntax for referring to an external script called 'xxx.js'?",
+        a: [{ text: "<script href='xxx.js'>", isCorrect: false },
+        { text: "<script src='xxx.js'>", isCorrect: true },
+        { text: "<script name='xxx.js'>", isCorrect: false }
+        ]
+    },
+    {
+        q: "The external JavaScript file must contain the <script> tag.",
+        a: [{ text: "False", isCorrect: true },
+        { text: "True", isCorrect: false }
+        ]
+    },
+    {
+        q: "How do you create a function in JavaScript?",
+        a: [{ text: "function myFunction()", isCorrect: true },
+        { text: "function:myFunction()", isCorrect: false },
+        { text: "function = myFunction()", isCorrect: false }
+    ]
+    },
+    {
+        q: "How can you add a comment in a JavaScript?",
+        a: [{ text: "'This is a comment'", isCorrect: false },
+        { text: "//This is a comment", isCorrect: true },
+        { text: "<!--This is a comment-->", isCorrect: false }
+    ]
+    },
+    {
+        q: "What is the correct way to write a JavaScript array?",
+        a: [{ text: "var colors = ['red', 'green', 'blue']", isCorrect: true },
+        { text: "var colors = 1 = ('red'), 2 = ('green'), 3 = ('blue')", isCorrect: false },
+        { text: "var colors = (1:'red', 2:'green', 3:'blue')", isCorrect: false },
+        { text: "var colors = 'red', 'green','red'", isCorrect: false }
+    ]
+    }
+    ];
+    console.log(questions);
+
 var timerRight = document.getElementById("timer");
 var buttonStart = document.querySelector(".start-button-box");
 var score = document.getElementById("view-score");
 var btnSubmit = document.getElementById("btnSub");
 var timerCount;
-var seconds;
+var secondsLeft = 90;
+var questionIndex;
+var holdInterval = 0;
 // btnSubmit.style.display = "block"; // this is to display the submit button
 
-var questions = [
-{
-    q: "Inside which HTML element do we put the JavaScript?",
-    a: [{ text: "<scripting>", isCorrect: false },
-    { text: "<js>", isCorrect: false },
-    { text: "<javascript>", isCorrect: false },
-    { text: "<script>", isCorrect: true }
-    ]
-},
-{
-    q: "Where is the correct place to insert a JavaScript?",
-    a: [{ text: "The <body> section", isCorrect: true },
-    { text: "The <head> section", isCorrect: false },
-    { text: "Both the <head> and the <body> section are correct", isCorrect: false }
-    ]
-},
-{
-    q: "What is the correct syntax for referring to an external script called 'xxx.js'?",
-    a: [{ text: "<script href='xxx.js'>", isCorrect: false },
-    { text: "<script src='xxx.js'>", isCorrect: true },
-    { text: "<script name='xxx.js'>", isCorrect: false }
-    ]
-},
-{
-    q: "The external JavaScript file must contain the <script> tag.",
-    a: [{ text: "False", isCorrect: true },
-    { text: "True", isCorrect: false }
-    ]
-},
-{
-    q: "How do you create a function in JavaScript?",
-    a: [{ text: "function myFunction()", isCorrect: true },
-    { text: "function:myFunction()", isCorrect: false },
-    { text: "function = myFunction()", isCorrect: false }
-]
-},
-{
-    q: "How can you add a comment in a JavaScript?",
-    a: [{ text: "'This is a comment'", isCorrect: false },
-    { text: "//This is a comment", isCorrect: true },
-    { text: "<!--This is a comment-->", isCorrect: false }
-]
-},
-{
-    q: "What is the correct way to write a JavaScript array?",
-    a: [{ text: "var colors = ['red', 'green', 'blue']", isCorrect: true },
-    { text: "var colors = 1 = ('red'), 2 = ('green'), 3 = ('blue')", isCorrect: false },
-    { text: "var colors = (1:'red', 2:'green', 3:'blue')", isCorrect: false },
-    { text: "var colors = 'red', 'green','red'", isCorrect: false }
-]
-}
-];
-console.log(questions);
-
-
-timerCount = setInterval (function() {
-    seconds--;
-    timerRight.textContent = "" + seconds;
-    if (seconds === 0) {
-        clearInterval(timerRight);
+timerRight.addEventListener("click", function () {
+    
+    if (timerRight.style.display === "none") {
+        timerRight.style.display = "block";
+    } else {
+        timerRight.style.display = "none";
+    }
+    console.log(timerRight);
+    
+    if (holdInterval === 0) {
+    holdInterval = setInterval (function() {
+    secondsLeft--;
+    timerRight.textContent = "Time" + secondsLeft;
+    
+    if (secondsLeft <= 0) {
+        clearInterval(holdInterval);
+        quizFinish();
+        
+    }
+    }
     }
 }, 1000);
+});
 
 function startGame () {
-    seconds = 180;
+    
     buttonStart.disable = true;
-    console.log(seconds);
-    //here goes the functions that start the game
+    console.log(secondsLeft);
     userQuestions();
     userAnswers();
     console.log(timerCount);
@@ -84,15 +100,16 @@ function startGame () {
 function userQuestions () {
     console.log(seconds);
 }
-  
 // here is validated the user's answers
 function userAnswers () {
     console.log(seconds);
 }
 
+function quizFinish () {
+
+}
 
 buttonStart.addEventListener("click", startGame);
-
 
 // setInterval will go inside the timerQuiz function.
 // function timerQuiz {
