@@ -33,14 +33,14 @@ var questions = [
         a: [{ text: "function myFunction()", isCorrect: true },
         { text: "function:myFunction()", isCorrect: false },
         { text: "function = myFunction()", isCorrect: false }
-    ]
+        ]
     },
     {
         q: "How can you add a comment in a JavaScript?",
         a: [{ text: "'This is a comment'", isCorrect: false },
         { text: "//This is a comment", isCorrect: true },
         { text: "<!--This is a comment-->", isCorrect: false }
-    ]
+        ]
     },
     {
         q: "What is the correct way to write a JavaScript array?",
@@ -48,67 +48,78 @@ var questions = [
         { text: "var colors = 1 = ('red'), 2 = ('green'), 3 = ('blue')", isCorrect: false },
         { text: "var colors = (1:'red', 2:'green', 3:'blue')", isCorrect: false },
         { text: "var colors = 'red', 'green','red'", isCorrect: false }
-    ]
+        ]
     }
-    ];
-    console.log(questions);
+];
+console.log(questions);
 
-var timerRight = document.getElementById("timer");
+var timerRight = document.getElementById("quiz-timer");
 var buttonStart = document.querySelector(".start-button-box");
 var score = document.getElementById("view-score");
 var btnSubmit = document.getElementById("btnSub");
+var questionQuiz = document.querySelector(".questionsDiv");
+console.log(questionQuiz);
 var timerCount;
 var secondsLeft = 90;
-var questionIndex;
-var holdInterval = 0;
-// btnSubmit.style.display = "block"; // this is to display the submit button
+var questionIndex = 0;
+var timeInterval;
 
-timerRight.addEventListener("click", function () {
-    
-    if (timerRight.style.display === "none") {
-        timerRight.style.display = "block";
-    } else {
-        timerRight.style.display = "none";
-    }
-    console.log(timerRight);
-    
-    if (holdInterval === 0) {
-    holdInterval = setInterval (function() {
-    secondsLeft--;
-    timerRight.textContent = "Time" + secondsLeft;
-    
-    if (secondsLeft <= 0) {
-        clearInterval(holdInterval);
-        quizFinish();
-        
-    }
-    }
-    }
-}, 1000);
-});
+// timerRight.addEventListener("click", 
+function setTime() {
+    timeInterval = setInterval(function () {
+        secondsLeft--;
+        timerRight.textContent = "Time " + secondsLeft;
+        if (secondsLeft === 0) {
 
-function startGame () {
-    
-    buttonStart.disable = true;
-    console.log(secondsLeft);
-    userQuestions();
-    userAnswers();
-    console.log(timerCount);
+            quizFinish();
+        }
+    }, 1000);
 }
 
-//here goes all the question to the user
-function userQuestions () {
-    console.log(seconds);
+function startGame() {
+    //hide button, comenzar timer, mostrar preguntas,  
+    setTime()
+    render();
+
 }
+
+function render() {
+    questionQuiz.innerHTML = "";
+    var titulo = document.createElement("h3")
+    titulo.textContent = questions[questionIndex].q;
+    var div = document.createElement("div")
+
+    for (var i = 0; i < questions[questionIndex].a.length; i++) {
+        // quiero crear botones para las respuestas de opcion
+        // crear
+        var respuestas = document.createElement("button");
+        // aggrear contenido, estilo, eventListener, attributes
+        respuestas.textContent = questions[questionIndex].a[i].text;
+        respuestas.setAttribute('value', questions[questionIndex].a[i].isCorrect)
+
+        respuestas.addEventListener('click', userAnswers)
+
+        // adjuntar
+        div.append(respuestas);
+    }
+
+    questionQuiz.append(titulo, div)
+
+}
+
 // here is validated the user's answers
-function userAnswers () {
-    console.log(seconds);
+function userAnswers(event) {
+    console.log(event.target.value);
+
+    // piense en el questionIndex como subir el number por uno
+
+    // piense en un condicional que verifica si hay mas preguntas. Si hay mas corra la funcion render(). si no corra quiz finish
 }
 
-function quizFinish () {
-
+function quizFinish() {
+    clearInterval(timeInterval);
 }
-
+// start the quiz
 buttonStart.addEventListener("click", startGame);
 
 // setInterval will go inside the timerQuiz function.

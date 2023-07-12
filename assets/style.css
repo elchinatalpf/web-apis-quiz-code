@@ -75,3 +75,7 @@ main {
 .quizContainer {
   width: 50%;
 }
+
+.esconder{
+  display: none;
+}
