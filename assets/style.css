@@ -7,7 +7,7 @@ body {
 display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: linear-gradient(0deg, rgb(72, 164, 218) 0%, rgba(237,245,249,1) 75%);
+  background: linear-gradient(0deg, rgb(212, 230, 240) 0%, rgb(65, 84, 93) 75%);
   background-repeat: no-repeat;
 }
 
@@ -16,7 +16,7 @@ header {
   padding: 50px;
   background: #818589;
   justify-content: center;
-  
+  background: linear-gradient(0deg, rgb(81, 162, 160) 0%, rgb(169, 166, 173) 50%);
 }
 
 #view-score {
@@ -24,6 +24,7 @@ header {
   top: 0;
   left: 0;
   padding: 10px;
+  margin: 10px;
   font-size: 20px;
   color: #e0d9d0;
 }
@@ -38,13 +39,14 @@ h1 {
   right: 0;
   padding: 10px;  
   font-size: 20px;
-  color: #021f24;
+  color: #010202;
 }
 
 .center-items {
   display: flex;
   justify-content: center;
   align-items: center;
+  color: white;
 }
 
 .start-button-box {
