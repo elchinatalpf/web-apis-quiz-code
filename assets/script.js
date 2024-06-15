@@ -132,14 +132,6 @@ function quizFinish() {
     questionsSection.innerHTML = '';
     afterQuiz.classList.remove('d-none');
     finalScore.textContent = "Your final score is: " + correctCount;
-
-    // message.textContent = ("Game Over. Check your score in the top left!"); // add btn here to redirect to the scores.
-    // questionQuiz.appendChild(message);
-
-    // localStorage.setItem("highscore", JSON.stringify(correctCount));
-    // var viewScoreButton = document.getElementById("view-score");
-    // viewScoreButton.textContent = "View Score";
-    // viewScoreButton.addEventListener("click", viewScore);
 }
 
 function correctAnswers(value) {
@@ -150,21 +142,8 @@ function correctAnswers(value) {
     }
 }
 
-//     // this need to be fixed. maybe redirecting to another HTML to re-format the page and add user scores. and a btn to come back to begiging. I think that will also need a js for that new html.
 function viewScore() {
     var highscore = JSON.parse(localStorage.getItem("highscore"));
-    // var initials = document.getElementById("#userScores");
-    // var divUserScores = document.createElement("div");
-    // divUserScores.innerHTML = "<input type='text' id='initialsInput' placeholder='ABC'>  <button>Submit</button>";
-    // var inputUser = document.createElement("input");
-    // inputUser.setAttribute("type", "text");
-    // inputUser.setAttribute("id", "initialsInput");
-    // inputUser.setAttribute("placeholder", "Enter initials");
-    // divUserScores.appendChild(inputUser);
-    // var btnSubmit = document.createElement("button");
-    // btnSubmit.textContent = "Submit";
-    // btnSubmit.addEventListener("click", btnSubmit);
-    // initials.appendChild(divUserScores);
     alert("Your score is " + highscore);
 }
 
@@ -186,8 +165,8 @@ document.addEventListener("submit", function (event) {
 
 function getUserScore() {
     var userScore = localStorage.getItem("highscore");
-    var userInitials = localStorage.getItem("initials");
-    if (userScore && userInitials === "") return;
+    var userInitialsStored = localStorage.getItem("initials");
+    if (userScore && userInitialsStored === "") return;
 
     afterQuiz.textContent = "";
     highscoresPage.classList.remove('d-none');
@@ -200,4 +179,6 @@ function init() {
 
 function clearHighscores() {
     highscoresPage.value = "";
+    localStorage.removeItem("highscore");
+    localStorage.removeItem("initials");
 }
