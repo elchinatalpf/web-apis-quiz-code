@@ -18,10 +18,10 @@
                     <h1>Welcome</h1>
                 </div>
                 <div class="col-md-2 col-sm-6 text-end">        
-                    <section>
+                    <!-- <section>
                         <a href="#" id="view-score">View Score</a>
-                    </section>
-                    <section id="quiz-timer">Timer</section>
+                    </section> -->
+                    <section id="timer">Timer: 0</section>
                 </div>
             </div>
         </header>
@@ -29,7 +29,7 @@
         <main class="container mt-4">
             <section class="quizContainer text-center">
                 <div class="center-items">
-                    <div class="questions">
+                    <div class="questionsdiv">
                         <p>This is a Web API Quiz Code.<br>You will have 1 minute to answer 7
                             questions about coding with JavaScript. Good Luck.</p>
                         <div class="start-button-box">
@@ -47,21 +47,21 @@
 
             <section class="after-quiz d-none mt-4 text-center">
                 <h3>Your Scores!</h3>
-                <p id="user-score"></p>
+                <p id="user-results"></p>
                 <p id="error-message"></p>
                 <form class="form-inline justtify-content-center">
                     <div class="form-group mb-2">
                         <label for="inputInitials" class="form-label">Enter Initials:</label>
                         <input type="text" class="form-control ms-2" id="inputInitials" placeholder="Enter your initials">
                     </div>
-                    <button type="submit" class="btn btn-primary mb-2 ms-2">Submit</button>
+                    <button type="submit" class="btn btn-primary mb-2 ms-2 submit">Submit</button>
                 </form>
             </section>
 
-            <section>
+            <section class="highscores-page d-none mt-4 text-center">
                 <h2>Highscores</h2>
                 <div>
-                    <input type="text" readonly class="form-control-plaintext" id="user-name" value="1.">
+                    <input type="text" readonly class="form-control-plaintext" id="user-initials" value="1.">
                 </div>
                 <button class="btn btn-secundary mt-2" onClick="init()">Go Back</button>
                 <button class="btn btn-secundary mt-2" onClick="clearHighscores()">Clear Highscores</button>
