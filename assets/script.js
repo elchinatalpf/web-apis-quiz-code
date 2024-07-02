@@ -16,7 +16,6 @@ var userInitials = document.querySelector("#user-initials");
 // var buttonStart = document.querySelector(".start-button-box");
 var score = document.getElementById("view-score");
 
-
 var questions = [
     {
         q: "Inside which HTML element do we put the JavaScript?",
@@ -94,83 +93,76 @@ function startGame() {
 }
 
 function displayQuestions() {
-    questionsQuiz.innerHTML = "";
+    if(questionIndex >= questions.length) {
+        quizFinish();
+        return;
+    }
+    console.log("Displaying question", questionIndex);
+
+    questionsSection.innerHTML = "";
     var titulo = document.createElement("h3")
     titulo.textContent = questions[questionIndex].q;
     var div = document.createElement("div")
 
-    for (var i = 0; i < questions[questionIndex].a.length; i++) {
-        var options = document.createElement("button");
-        options.textContent = questions[questionIndex].a[i].text;
-        options.setAttribute('value', questions[questionIndex].a[i].isCorrect)
-        options.addEventListener('click', userAnswers)
-        options.style.margin = "5px";
-        options.style.borderColor = "lightblue";
-        options.style.borderStyle = "solid";
-        options.style.borderRadius = "5px";
-        div.append(options);
-    }
-    questionsQuiz.append(titulo, div)
+    questions[questionIndex].a.forEach((answer, index) => {
+        var option = document.createElement("button");
+        option.textContent = `${index + 1}. ${answer.text}`;
+        option.setAttribute('value', answer.isCorrect);
+        option.addEventListener('click', userAnswers);
+        option.classList.add('btn', 'btn-poutline-primary', 'm-2');
+        option.style.margin = "5px";
+        option.style.borderColor = "lightblue";
+        option.style.borderStyle = "solid";
+        option.style.borderRadius = "5px";
+        div.appendChild(option);
+    }); 
+    questionsSection.appendChild(titulo);
+    questionsSection.appendChild(div);
 }
 
 function userAnswers(event) {
-    correctAnswers(event.target.value);
+    correctAnswers(event.target.value === "true");
     questionIndex++;
-
-    if (questionIndex < questions.length) {
-        displayQuestions(); 
-        // add check answer.
-        // viewScore();
-    } else {
-        quizFinish();
-    }
+    displayQuestions(); 
 }
 
 function quizFinish() {
     clearInterval(timeInterval);
-    // var message = document.createElement("h4");
-    questionsSection.innerHTML = '';
+    questionsSection.classList.add('d-none');
     afterQuiz.classList.remove('d-none');
     finalScore.textContent = "Your final score is: " + correctCount;
 }
 
-function correctAnswers(value) {
-    if (value === "true") {
+function correctAnswers(isCorrect) {
+    if (isCorrect) {
         correctCount++;
     } else {
-        secondsLeft -= 5;
+        secondsLeft = Math.max(0, secondsLeft - 5);
     }
 }
 
-function viewScore() {
-    var highscore = JSON.parse(localStorage.getItem("highscore"));
-    alert("Your score is " + highscore);
-}
-
-startBtn.addEventListener("click", startGame);
-
-document.addEventListener("submit", function (event) {
+function saveScore(event) {
     event.ppreventDefault();
-    var initialInputValue = inputInitials.value;
+    const initialInputValue = inputInitials.value.trim();
     if (initialInputValue === "") {
-        errMsg.style.color = "red";
         errMsg.textContent = "Initial's field can't be empty!";
-    } else {
-        errMsg.textContent = "";
-        localStorage.setItem("initials", initialInputValue);
-        localStorage.setItem("highscore", correctCount);
-        getUserScore();
+        return;
     }
-});
+    errMsg.textContent = "";
+    localStorage.setItem("initials", initialInputValue);
+    localStorage.setItem("highscore", correctCount);
+    displayHighScores();
+}
 
-function getUserScore() {
-    var userScore = localStorage.getItem("highscore");
-    var userInitialsStored = localStorage.getItem("initials");
-    if (userScore && userInitialsStored === "") return;
+function displayHighScores() {
+    const storedScore = localStorage.getItem("highscore");
+    const storedInitials = localStorage.getItem("initials");
 
-    afterQuiz.textContent = "";
+    if (!storedScore || !storedInitials) return;
+
+    afterQuiz.classList.add('d-none');
     highscoresPage.classList.remove('d-none');
-    userInitials.value = userInitials + ": " + userScore;
+    userInitials.value = `${storedInitials}: ${storedScore}`;
 }
 
 function init() {
@@ -178,7 +170,15 @@ function init() {
 }
 
 function clearHighscores() {
-    highscoresPage.value = "";
+    userInitials.value = "";
     localStorage.removeItem("highscore");
     localStorage.removeItem("initials");
+
 }
+
+startBtn.addEventListener("click", startGame);
+submitEl.addEventListener("click", saveScore);
+
+questionsSection.classList.add('d-none');
+afterQuiz.classList.add('d-none');
+highscoresPage.classList.add('d-none');
