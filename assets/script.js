@@ -1,3 +1,4 @@
+var viewScoreLink = document.getElementById('view-score');
 var timer = document.getElementById("timer");
 var startBtn = document.querySelector(".start-button");
 var questionsQuiz = document.querySelector(".questionsdiv");
@@ -142,7 +143,7 @@ function correctAnswers(isCorrect) {
 }
 
 function saveScore(event) {
-    event.ppreventDefault();
+    event.preventDefault();
     const initialInputValue = inputInitials.value.trim();
     if (initialInputValue === "") {
         errMsg.textContent = "Initial's field can't be empty!";
@@ -154,26 +155,51 @@ function saveScore(event) {
     displayHighScores();
 }
 
+function viewScore() {
+    var storedScore = localStorage.getItem("highscore");
+    var storedInitials = localStorage.getItem("initials");
+
+    if (storedScore && storedInitials) {
+        alert(`Last high Score: ${storedInitials} - ${storedScore}`);
+    } else {
+        alert("No high score available yet.");
+    }
+}
+
+viewScoreLink.addEventListener('click', viewScore);
+
 function displayHighScores() {
-    const storedScore = localStorage.getItem("highscore");
-    const storedInitials = localStorage.getItem("initials");
+    var storedScore = localStorage.getItem("highscore");
+    var storedInitials = localStorage.getItem("initials");
 
-    if (!storedScore || !storedInitials) return;
+    if (!storedScore || !storedInitials) {
+        alert("No high score available yet.");
+        return;
+    } 
 
+    questionsQuiz.style.display = 'none';
+    questionsSection.classList.add('d-none');
     afterQuiz.classList.add('d-none');
     highscoresPage.classList.remove('d-none');
     userInitials.value = `${storedInitials}: ${storedScore}`;
 }
 
 function init() {
-    location.reload();
+    questionsQuiz.style.display = 'block';
+    questionsSection.classList.add('d-none');
+    afterQuiz.classList.add('d-none');
+    highscoresPage.classList.add('d-none');
+    secondsLeft = 90;
+    questionIndex = 0;
+    correctCount = 0;
+    timer.textContent = "Timer: " + secondsLeft;
+    // location.reload();
 }
 
 function clearHighscores() {
     userInitials.value = "";
     localStorage.removeItem("highscore");
     localStorage.removeItem("initials");
-
 }
 
 startBtn.addEventListener("click", startGame);
@@ -182,3 +208,5 @@ submitEl.addEventListener("click", saveScore);
 questionsSection.classList.add('d-none');
 afterQuiz.classList.add('d-none');
 highscoresPage.classList.add('d-none');
+
+init();

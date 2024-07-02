@@ -12,34 +12,26 @@ display: flex;
 }
 
 header {
-  display: flex;
   padding: 50px;
-  background: #818589;
-  justify-content: center;
   background: linear-gradient(0deg, rgb(81, 162, 160) 0%, rgb(169, 166, 173) 50%);
-}
-
-#view-score {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 10px;
-  margin: 10px;
-  font-size: 20px;
-  color: #e0d9d0;
 }
 
 h1 {
   text-align: center;
 }
 
-#quiz-timer {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 10px;  
-  font-size: 20px;
-  color: #010202;
+#view-score {
+  color: #e0d9d0;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#view-score:hover {
+  text-decoration: underline;
+}
+
+#timer {
+  font-weight: bold;
 }
 
 .center-items {
