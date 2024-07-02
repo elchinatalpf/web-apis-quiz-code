@@ -1,3 +1,21 @@
+var timer = document.getElementById("timer");
+var startBtn = document.querySelector(".start-button");
+var questionsQuiz = document.querySelector(".questionsdiv");
+var questionsSection = document.querySelector(".questions-section");
+var titleEl = document.querySelector("#title");
+var listEl = document.querySelector("#list");
+var afterQuiz = document.querySelector(".after-quiz");
+var finalScore = document.querySelector("#user-results");
+var errMsg = document.querySelector("#error-message");
+var inputInitials = document.querySelector("#inputInitials");
+var submitEl = document.querySelector(".submit");
+var responseDiv = document.querySelector("#response");
+var highscoresPage = document.querySelector(".highscores-page");
+var userInitials = document.querySelector("#user-initials");
+// var timerRight = document.getElementById("quiz-timer");
+// var buttonStart = document.querySelector(".start-button-box");
+var score = document.getElementById("view-score");
+
 var questions = [
     {
         q: "Inside which HTML element do we put the JavaScript?",
@@ -51,10 +69,6 @@ var questions = [
     }
 ];
 
-var timerRight = document.getElementById("quiz-timer");
-var buttonStart = document.querySelector(".start-button-box");
-var score = document.getElementById("view-score");
-var questionQuiz = document.querySelector(".questionsDiv");
 var timerCount;
 var secondsLeft = 90;
 var questionIndex = 0;
@@ -64,117 +78,107 @@ var correctCount = 0;
 function setTime() {
     timeInterval = setInterval(function () {
         secondsLeft--;
-        timerRight.textContent = "Time " + secondsLeft;
-        if (secondsLeft === 0) {
+        timer.textContent = "Time " + secondsLeft;
+        if (secondsLeft <= 0) {
             quizFinish();
         }
     }, 1000);
 }
 
 function startGame() {
-    //hide button, start timer, show questions.  
+    questionsQuiz.style.display = 'none';
+    questionsSection.classList.remove('d-none');
     setTime()
-    render();
+    displayQuestions();
 }
 
-function render() {
-    questionQuiz.innerHTML = "";
+function displayQuestions() {
+    if(questionIndex >= questions.length) {
+        quizFinish();
+        return;
+    }
+    console.log("Displaying question", questionIndex);
+
+    questionsSection.innerHTML = "";
     var titulo = document.createElement("h3")
     titulo.textContent = questions[questionIndex].q;
     var div = document.createElement("div")
 
-    for (var i = 0; i < questions[questionIndex].a.length; i++) {
-        // quiero crear botones para las respuestas de opcion
-        // crear
-        var respuestas = document.createElement("button");
-        // aggrear contenido, estilo, eventListener, attributes
-        respuestas.textContent = questions[questionIndex].a[i].text;
-        respuestas.setAttribute('value', questions[questionIndex].a[i].isCorrect)
-        respuestas.addEventListener('click', userAnswers)
-        respuestas.style.margin = "5px";
-        respuestas.style.borderColor = "lightblue";
-        respuestas.style.borderStyle = "solid";
-        respuestas.style.borderRadius = "5px";
-        // adjuntar
-        div.append(respuestas);
-    }
-    questionQuiz.append(titulo, div)
+    questions[questionIndex].a.forEach((answer, index) => {
+        var option = document.createElement("button");
+        option.textContent = `${index + 1}. ${answer.text}`;
+        option.setAttribute('value', answer.isCorrect);
+        option.addEventListener('click', userAnswers);
+        option.classList.add('btn', 'btn-poutline-primary', 'm-2');
+        option.style.margin = "5px";
+        option.style.borderColor = "lightblue";
+        option.style.borderStyle = "solid";
+        option.style.borderRadius = "5px";
+        div.appendChild(option);
+    }); 
+    questionsSection.appendChild(titulo);
+    questionsSection.appendChild(div);
 }
 
-// here is validated the user's answers
 function userAnswers(event) {
-    correctAnswers(event.target.value);
+    correctAnswers(event.target.value === "true");
     questionIndex++;
-
-    if (questionIndex < questions.length) {
-        render(); 
-        // add check answer.
-        // viewScore();
-    } else {
-        quizFinish();
-    }
+    displayQuestions(); 
 }
 
 function quizFinish() {
     clearInterval(timeInterval);
-    var message = document.createElement("h4");
-    message.textContent = ("Game Over. Check your score in the top left!"); // add btn here to redirect to the scores.
-    questionQuiz.appendChild(message);
-
-    localStorage.setItem("highscore", JSON.stringify(correctCount));
-    var viewScoreButton = document.getElementById("view-score");
-    viewScoreButton.textContent = "View Score";
-    viewScoreButton.addEventListener("click", viewScore);
+    questionsSection.classList.add('d-none');
+    afterQuiz.classList.remove('d-none');
+    finalScore.textContent = "Your final score is: " + correctCount;
 }
 
-function correctAnswers(value) {
-    if (value === "true") {
-        console.log(value);
+function correctAnswers(isCorrect) {
+    if (isCorrect) {
         correctCount++;
     } else {
-        secondsLeft -= 10;
+        secondsLeft = Math.max(0, secondsLeft - 5);
     }
 }
 
-//     // this need to be fixed. maybe redirecting to another HTML to re-format the page and add user scores. and a btn to come back to begiging. I think that will also need a js for that new html.
-function viewScore() {
-    var highscore = JSON.parse(localStorage.getItem("highscore"));
-    // var initials = document.getElementById("#userScores");
-    // var divUserScores = document.createElement("div");
-    // divUserScores.innerHTML = "<input type='text' id='initialsInput' placeholder='ABC'>  <button>Submit</button>";
-    // var inputUser = document.createElement("input");
-    // inputUser.setAttribute("type", "text");
-    // inputUser.setAttribute("id", "initialsInput");
-    // inputUser.setAttribute("placeholder", "Enter initials");
-    // divUserScores.appendChild(inputUser);
-    // var btnSubmit = document.createElement("button");
-    // btnSubmit.textContent = "Submit";
-    // btnSubmit.addEventListener("click", btnSubmit);
-    // initials.appendChild(divUserScores);
-    alert("Your score is " + highscore);
+function saveScore(event) {
+    event.ppreventDefault();
+    const initialInputValue = inputInitials.value.trim();
+    if (initialInputValue === "") {
+        errMsg.textContent = "Initial's field can't be empty!";
+        return;
+    }
+    errMsg.textContent = "";
+    localStorage.setItem("initials", initialInputValue);
+    localStorage.setItem("highscore", correctCount);
+    displayHighScores();
 }
 
-buttonStart.addEventListener("click", startGame);
+function displayHighScores() {
+    const storedScore = localStorage.getItem("highscore");
+    const storedInitials = localStorage.getItem("initials");
 
-// ## User Story
+    if (!storedScore || !storedInitials) return;
 
-// ```
-// AS A coding boot camp student
-// I WANT to take a timed quiz on JavaScript fundamentals that stores high scores
-// SO THAT I can gauge my progress compared to my peers
-// ```
+    afterQuiz.classList.add('d-none');
+    highscoresPage.classList.remove('d-none');
+    userInitials.value = `${storedInitials}: ${storedScore}`;
+}
 
-// ## Acceptance Criteria
+function init() {
+    location.reload();
+}
 
-// ```
-// GIVEN I am taking a code quiz
-// WHEN I click the start button
-// THEN a timer starts and I am presented with a question
-// WHEN I answer a question
-// THEN I am presented with another question
-// WHEN I answer a question incorrectly
-// THEN time is subtracted from the clock
-// WHEN all questions are answered or the timer reaches 0
-// THEN the game is over
-// WHEN the game is over
-// THEN I can save my initials and my score
+function clearHighscores() {
+    userInitials.value = "";
+    localStorage.removeItem("highscore");
+    localStorage.removeItem("initials");
+
+}
+
+startBtn.addEventListener("click", startGame);
+submitEl.addEventListener("click", saveScore);
+
+questionsSection.classList.add('d-none');
+afterQuiz.classList.add('d-none');
+highscoresPage.classList.add('d-none');
