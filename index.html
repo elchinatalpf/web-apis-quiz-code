@@ -39,7 +39,7 @@
                 </div>
             </section>
 
-            <section class="questions-section d-none mt-4">
+            <section class="questions-section d-none text-light mt-4">
                 <h3 id="title"></h3>
                 <ol id="list"></ol>
                 <div id="response"></div>
@@ -58,13 +58,14 @@
                 </form>
             </section>
 
-            <section class="highscores-page d-none mt-4 text-center">
+            <section class="highscores-page text-light d-none mt-4 text-center">
                 <h2>Highscores</h2>
-                <div>
-                    <input type="text" readonly class="form-control-plaintext" id="user-initials" value="1.">
-                </div>
-                <button class="btn btn-secundary mt-2" onClick="init()">Go Back</button>
-                <button class="btn btn-secundary mt-2" onClick="clearHighscores()">Clear Highscores</button>
+                <div id="highscores-list"></div>
+                <!-- <div>
+                    <input type="text" readonly class="form-control-plaintext text-light" id="user-initials" value="1.">
+                </div> -->
+                <button class="btn btn-secundary text-light mt-2" onClick="init()">Go Back</button>
+                <button class="btn btn-secundary text-light mt-2" onClick="clearHighscores()">Clear Highscores</button>
             </section>
         </main>
 
