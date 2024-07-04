@@ -1,3 +1,4 @@
+// All Selectors
 var viewScoreLink = document.getElementById('view-score');
 var timer = document.getElementById("timer");
 var startBtn = document.querySelector(".start-button");
@@ -5,17 +6,16 @@ var questionsQuiz = document.querySelector(".questionsdiv");
 var questionsSection = document.querySelector(".questions-section");
 var titleEl = document.querySelector("#title");
 var listEl = document.querySelector("#list");
+var responseDiv = document.querySelector("#response");
 var afterQuiz = document.querySelector(".after-quiz");
 var finalScore = document.querySelector("#user-results");
 var errMsg = document.querySelector("#error-message");
 var inputInitials = document.querySelector("#inputInitials");
 var submitEl = document.querySelector(".submit");
-var responseDiv = document.querySelector("#response");
 var highscoresPage = document.querySelector(".highscores-page");
-var userInitials = document.querySelector("#user-initials");
 var score = document.getElementById("view-score");
 var highscoresList = document.getElementById('highscores-list');
-
+// Questions array of objects.
 var questions = [
     {
         q: "Inside which HTML element do we put the JavaScript?",
@@ -68,13 +68,13 @@ var questions = [
         ]
     }
 ];
-
+// Vars for timer and count
 var timerCount;
 var secondsLeft = 90;
 var questionIndex = 0;
 var timeInterval;
 var correctCount = 0;
-
+// function for timer
 function setTime() {
     timeInterval = setInterval(function () {
         secondsLeft--;
@@ -84,64 +84,73 @@ function setTime() {
         }
     }, 1000);
 }
-
+// Being the game on click, sets the time and displays the questions
 function startGame() {
     questionsQuiz.style.display = 'none';
     questionsSection.classList.remove('d-none');
     setTime()
     displayQuestions();
 }
-
+// Display all questions
 function displayQuestions() {
     if(questionIndex >= questions.length) {
         quizFinish();
         return;
     }
 
-    questionsSection.innerHTML = "";
-    var titulo = document.createElement("h3")
-    titulo.textContent = questions[questionIndex].q;
-    var div = document.createElement("div")
+    titleEl.textContent = questions[questionIndex].q;
+    listEl.innerHTML = "";
+    responseDiv.textContent = "";
 
     questions[questionIndex].a.forEach((answer, index) => {
-        var option = document.createElement("button");
-        option.textContent = `${index + 1}. ${answer.text}`;
-        option.setAttribute('data-correct', answer.isCorrect);
-        option.addEventListener('click', userAnswers);
-        option.classList.add('question-button');
-        div.appendChild(option);
+        var option = document.createElement("li");
+        var button = document.createElement("button");
+        button.textContent = `${index + 1}. ${answer.text}`;
+        button.setAttribute('data-correct', answer.isCorrect);
+        button.addEventListener('click', userAnswers);
+        button.classList.add('question-button');
+        option.appendChild(button);
+        listEl.appendChild(option);
     }); 
-    questionsSection.appendChild(titulo);
-    questionsSection.appendChild(div);
+    questionsSection.appendChild(titleEl);
+    questionsSection.appendChild(listEl);
+    questionsSection.appendChild(responseDiv);
 }
-
+// User's answer with logic to keep going or finish.
 function userAnswers(event) {
     var selectedBtn = event.target;
     var correct = selectedBtn.getAttribute('data-correct') === 'true';
     correctAnswers(correct);
-    questionIndex++;
-    if (questionIndex < questions.length) {
-        displayQuestions(); 
-    } else {
-        quizFinish();
-    }
+    setTimeout(function() {
+        questionIndex++;
+        responseDiv.textContent = "";
+        if (questionIndex < questions.length) {
+            displayQuestions(); 
+        } else {
+            quizFinish();
+        }
+    }, 650);
 }
-
+// Finish the quiz and timer
 function quizFinish() {
     clearInterval(timeInterval);
     questionsSection.classList.add('d-none');
     afterQuiz.classList.remove('d-none');
     finalScore.textContent = "Your final score is: " + correctCount;
 }
-
+// Logic for correct answers
 function correctAnswers(isCorrect) {
     if (isCorrect) {
         correctCount++;
+        responseDiv.textContent = "Correct!";
+        responseDiv.style.color = "green";
     } else {
         secondsLeft = Math.max(0, secondsLeft - 5);
+        responseDiv.textContent = "Wrong!";
+        responseDiv.style.color = "red";
     }
 }
-
+// Save the user's score
 function saveScore(event) {
     event.preventDefault();
     const initialInputValue = inputInitials.value.trim();
@@ -150,34 +159,19 @@ function saveScore(event) {
         return;
     }
     errMsg.textContent = "";
-
     var scores = JSON.parse(localStorage.getItem("highscores")) || [];
     var newScore = {
         initials: initialInputValue,
         score: correctCount
     };
-
     scores.push(newScore);
     localStorage.setItem("highscores", JSON.stringify(scores));
     displayHighScores();
 }
-
-function viewScore() {
-    var storedScore = localStorage.getItem("highscores");
-    var storedInitials = localStorage.getItem("initials");
-
-    if (storedScore && storedInitials) {
-        alert(`Last high Score: ${storedInitials} - ${storedScore}`);
-    } else {
-        alert("No high score available yet.");
-    }
-}
-
-
+// Show All High Scores
 function displayHighScores() {
     highscoresList.innerHTML = "";
     var scores = JSON.parse(localStorage.getItem("highscores")) || [];
-    
     if (scores.length === 0) {
         highscoresList.innerHTML = '<p>No high scores available yet.</p>';
     } else {
@@ -189,13 +183,12 @@ function displayHighScores() {
         });
         highscoresList.appendChild(scoresList);
     }
-    
     questionsQuiz.style.display = 'none';
     questionsSection.classList.add('d-none');
     afterQuiz.classList.add('d-none');
     highscoresPage.classList.remove('d-none');
 }
-
+// Initialize the quiz
 function init() {
     questionsQuiz.style.display = 'block';
     questionsSection.classList.add('d-none');
@@ -206,17 +199,14 @@ function init() {
     correctCount = 0;
     timer.textContent = "Timer: " + secondsLeft;
 }
-
+// Clear the scores
 function clearHighscores() {
     highscoresList.innerHTML = "";
     localStorage.removeItem("highscores");
 }
 
-viewScoreLink.addEventListener('click', function() {
-    displayHighScores();
-});
-
-
+// Event Listener for buttons start and submit
+viewScoreLink.addEventListener('click', displayHighScores);
 startBtn.addEventListener("click", startGame);
 submitEl.addEventListener("click", saveScore);
 
